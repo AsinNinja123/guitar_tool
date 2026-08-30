@@ -69,6 +69,7 @@ nav a.nav-active::after { content:''; height:2px; background:var(--wood); positi
 .song-search { display:flex; align-items:center; margin-top:24px; padding:0 18px; border:1px solid #d9ddd6; background:white; }
 .song-search>span { color:var(--wood); font-size:25px; transform:rotate(-20deg); }
 .song-search input { flex:1; min-width:0; padding:16px 14px; border:0; outline:0; background:transparent; font:inherit; font-size:14px; }
+.search-tip { margin:8px 0 13px; color:#8a918b; font-size:10px; }
 .song-list { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid #d9ddd6; border-top:0; background:white; }
 .song-list article { min-width:0; padding:18px; border-right:1px solid var(--line); }
 .song-list article:last-child { border-right:0; }

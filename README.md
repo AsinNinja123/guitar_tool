@@ -10,7 +10,7 @@ Fretwise is a responsive guitar theory and transposition app. Paste a chord prog
 - A responsive 12-fret scale visualizer
 - Fretboard note quizzes
 - Device-local saved songs
-- Spotify catalog search with automatic MusicBrainz fallback
+- Spotify catalog search with an Apple Music fallback and final MusicBrainz fallback
 - Supabase email sign-in and cross-device song syncing
 - A shared, confidence-scored song-key database that grows from verified chord analyses
 
