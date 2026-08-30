@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fretwise.openai.site'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fretwise-guitar.charlie93110.chatgpt.site'),
   title: 'Fretwise — Guitar transposition made clear',
   description: 'Find a song key, compare capo options, transpose chords, and learn your fretboard.',
   openGraph: {
