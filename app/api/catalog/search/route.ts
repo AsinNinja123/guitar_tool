@@ -15,6 +15,11 @@ type CatalogTrack = {
   progression: string | null;
 };
 
+type ITunesItem = { kind?:string; trackId:number|string; trackName:string; artistName:string; collectionName?:string; artworkUrl100?:string; trackViewUrl?:string };
+type SpotifyArtist = { name:string };
+type SpotifyItem = { id:string; name:string; artists?:SpotifyArtist[]; album?:{name?:string;images?:Array<{url:string}>}; external_urls?:{spotify?:string}; external_ids?:{isrc?:string} };
+type MusicBrainzItem = { id:string; title:string; 'artist-credit'?:Array<{name:string}>; releases?:Array<{title:string}>; isrcs?:string[] };
+
 async function knownKeys(tracks: CatalogTrack[]) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -64,8 +69,8 @@ function rankTracks(tracks:CatalogTrack[],query:string) {
 async function searchITunes(query:string): Promise<CatalogTrack[]> {
   const response=await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&country=US&media=music&entity=song&limit=30&explicit=Yes`,{headers:{Accept:'application/json'}});
   if(!response.ok)return [];
-  const data=await response.json() as any;
-  const tracks:CatalogTrack[]=(data.results||[]).filter((item:any)=>item.kind==='song').map((item:any)=>({
+  const data=await response.json() as {results?:ITunesItem[]};
+  const tracks:CatalogTrack[]=(data.results||[]).filter(item=>item.kind==='song').map(item=>({
     id:String(item.trackId),title:item.trackName,artist:item.artistName,album:item.collectionName||'',image:item.artworkUrl100?.replace('100x100','300x300')||null,url:item.trackViewUrl||null,isrc:null,provider:'itunes',key:null,mode:null,confidence:null,progression:null,
   }));
   return knownKeys(rankTracks(tracks,query));
@@ -80,10 +85,10 @@ async function searchSpotify(query:string): Promise<CatalogTrack[] | null> {
   const {access_token}=await tokenResponse.json() as {access_token:string};
   const response=await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=8`,{headers:{Authorization:`Bearer ${access_token}`}});
   if (!response.ok) return null;
-  const data=await response.json() as any;
-  const rawItems=data?.tracks?.items || data?.items?.items?.map((entry:any)=>entry.item) || [];
-  const tracks:CatalogTrack[]=rawItems.filter(Boolean).map((item:any)=>({
-    id:item.id,title:item.name,artist:item.artists?.map((artist:any)=>artist.name).join(', ')||'Unknown artist',album:item.album?.name||'',image:item.album?.images?.[1]?.url||item.album?.images?.[0]?.url||null,url:item.external_urls?.spotify||null,isrc:item.external_ids?.isrc||null,provider:'spotify',key:null,mode:null,confidence:null,progression:null,
+  const data=await response.json() as {tracks?:{items?:SpotifyItem[]}};
+  const rawItems=data.tracks?.items || [];
+  const tracks:CatalogTrack[]=rawItems.filter(Boolean).map(item=>({
+    id:item.id,title:item.name,artist:item.artists?.map(artist=>artist.name).join(', ')||'Unknown artist',album:item.album?.name||'',image:item.album?.images?.[1]?.url||item.album?.images?.[0]?.url||null,url:item.external_urls?.spotify||null,isrc:item.external_ids?.isrc||null,provider:'spotify',key:null,mode:null,confidence:null,progression:null,
   }));
   return knownKeys(tracks);
 }
@@ -91,9 +96,9 @@ async function searchSpotify(query:string): Promise<CatalogTrack[] | null> {
 async function searchMusicBrainz(query:string): Promise<CatalogTrack[]> {
   const response=await fetch(`https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(query)}&limit=8&fmt=json`,{headers:{'User-Agent':'Fretwise/1.0 (https://github.com/AsinNinja123/guitar_tool)','Accept':'application/json'}});
   if (!response.ok) return [];
-  const data=await response.json() as any;
-  const tracks:CatalogTrack[]=(data.recordings||[]).map((item:any)=>({
-    id:item.id,title:item.title,artist:item['artist-credit']?.map((credit:any)=>credit.name).join(', ')||'Unknown artist',album:item.releases?.[0]?.title||'',image:null,url:`https://musicbrainz.org/recording/${item.id}`,isrc:item.isrcs?.[0]||null,provider:'musicbrainz',key:null,mode:null,confidence:null,progression:null,
+  const data=await response.json() as {recordings?:MusicBrainzItem[]};
+  const tracks:CatalogTrack[]=(data.recordings||[]).map(item=>({
+    id:item.id,title:item.title,artist:item['artist-credit']?.map(credit=>credit.name).join(', ')||'Unknown artist',album:item.releases?.[0]?.title||'',image:null,url:`https://musicbrainz.org/recording/${item.id}`,isrc:item.isrcs?.[0]||null,provider:'musicbrainz',key:null,mode:null,confidence:null,progression:null,
   }));
   return knownKeys(tracks);
 }
