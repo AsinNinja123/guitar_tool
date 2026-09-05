@@ -94,7 +94,7 @@ async function searchSpotify(query:string): Promise<CatalogTrack[] | null> {
 }
 
 async function searchMusicBrainz(query:string): Promise<CatalogTrack[]> {
-  const response=await fetch(`https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(query)}&limit=8&fmt=json`,{headers:{'User-Agent':'Fretwise/1.0 (https://github.com/AsinNinja123/guitar_tool)','Accept':'application/json'}});
+  const response=await fetch(`https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(query)}&limit=8&fmt=json`,{headers:{'User-Agent':'CharsGuitar/1.0 (https://github.com/AsinNinja123/guitar_tool)','Accept':'application/json'}});
   if (!response.ok) return [];
   const data=await response.json() as {recordings?:MusicBrainzItem[]};
   const tracks:CatalogTrack[]=(data.recordings||[]).map(item=>({

@@ -13,17 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fretwise-guitar.charlie93110.chatgpt.site'),
-  title: 'Fretwise — Guitar transposition made clear',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://chars-guitar.charlie93110.chatgpt.site'),
+  title: "Char's Guitar — Guitar transposition made clear",
   description: 'Find a song key, compare capo options, transpose chords, and learn your fretboard.',
   openGraph: {
-    title: 'Fretwise — Play the song. Understand the music.',
+    title: "Char's Guitar — Play the song. Understand the music.",
     description: 'Keys, capo options, and fretboard clarity.',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Fretwise guitar learning app' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: "Char's Guitar learning app" }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Fretwise — Play the song. Understand the music.',
+    title: "Char's Guitar — Play the song. Understand the music.",
     description: 'Keys, capo options, and fretboard clarity.',
     images: ['/og.png'],
   },
